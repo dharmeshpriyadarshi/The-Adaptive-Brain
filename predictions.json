@@ -1,0 +1,13 @@
+{
+  "Delhi": {
+    "2026-01-01": {"aqi": 345, "trend": "Severe Winter Peak", "is_anomaly": true},
+    "2026-01-02": {"aqi": 330, "trend": "Severe Winter Peak", "is_anomaly": false},
+    "2026-01-03": {"aqi": 310, "trend": "Severe Winter Peak", "is_anomaly": false},
+    "2026-06-15": {"aqi": 120, "trend": "Monsoon Relief", "is_anomaly": false},
+    "2026-11-05": {"aqi": 450, "trend": "Post-Festival Spike", "is_anomaly": true},
+    "2026-11-06": {"aqi": 480, "trend": "Post-Festival Spike", "is_anomaly": true}
+  },
+  "Mumbai": {
+    "2026-01-01": {"aqi": 150, "trend": "Moderate Coastal", "is_anomaly": false}
+  }
+}

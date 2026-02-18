@@ -1,0 +1,209 @@
+:root {
+    --bg-color: #0f1110;
+    --text-primary: #e0e0d5;
+    --text-secondary: #a0a09a;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent-green: #4a6c4c;  /* Earthy Green */
+    --accent-red: #c95d5d;    /* Warning Red */
+    --accent-gold: #c9b05d;   /* Moderate Gold */
+    --highlight: #66ff99;     /* Tech Green */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(74, 108, 76, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(100, 100, 100, 0.1) 0%, transparent 20%);
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.highlight {
+    color: var(--highlight);
+    font-weight: 600;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Glass Panel Style */
+.glass-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-end;
+}
+
+.control-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 200px;
+}
+
+label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+select, input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.8rem;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.primary-btn {
+    background: var(--accent-green);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.primary-btn:hover {
+    background: #5a825c;
+    transform: translateY(-2px);
+}
+
+/* Results Area */
+.hidden {
+    display: none;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    text-align: center;
+}
+
+.kpi-card h3 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.kpi-status {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+/* Status Colors */
+.status-good { color: var(--accent-green); border: 1px solid var(--accent-green); }
+.status-poor { color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+.status-severe { color: var(--accent-red); border: 1px solid var(--accent-red); }
+
+.trend-name {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-top: 0.5rem;
+}
+
+.trend-desc {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+/* Chart */
+.chart-container {
+    height: 350px;
+    width: 100%;
+    position: relative;
+}
+
+/* Loading */
+#loading {
+    text-align: center;
+    color: var(--text-secondary);
+    margin: 2rem 0;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    border-top-color: var(--highlight);
+    animation: spin 1s ease-in-out infinite;
+    margin: 0 auto 1rem auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: auto;
+}

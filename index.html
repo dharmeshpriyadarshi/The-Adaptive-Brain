@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veridian | Future Pollution Trends</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js for visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Veridian <span class="highlight">2026</span></h1>
+            <p class="subtitle">Predicting Pollution Trends (Adaptive Subsequence Pattern Alignment)</p>
+        </header>
+
+        <main>
+            <!-- Controls Section -->
+            <section class="controls glass-panel">
+                <div class="control-group">
+                    <label for="citySelect">Select City</label>
+                    <select id="citySelect">
+                        <option value="Delhi">Delhi</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Bangalore">Bangalore</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="datePicker">Date in 2026</label>
+                    <input type="date" id="datePicker" min="2026-01-01" max="2026-12-31" value="2026-01-01">
+                </div>
+
+                <button id="predictBtn" class="primary-btn">Analyze Date</button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results hidden" id="resultSection">
+                <div class="kpi-grid">
+                    <div class="kpi-card glass-panel" id="aqiCard">
+                        <h3>Predicted AQI</h3>
+                        <div class="kpi-value" id="aqiValue">--</div>
+                        <div class="kpi-status" id="aqiStatus">--</div>
+                    </div>
+                    
+                    <div class="kpi-card glass-panel" id="trendCard">
+                        <h3>Identified Trend</h3>
+                        <div class="trend-name" id="trendName">--</div>
+                        <p class="trend-desc" id="trendDesc">Analyzing historical patterns...</p>
+                    </div>
+                </div>
+
+                <!-- Visualization -->
+                <div class="chart-container glass-panel">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </section>
+            
+            <!-- Loading State -->
+            <div id="loading" class="hidden">
+                <div class="spinner"></div>
+                <p>Aligning warped time sequences...</p>
+            </div>
+
+        </main>
+        
+        <footer>
+            <p>Powered by Veridian ASPA Engine • Model v0.1 (Alpha)</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
