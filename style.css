@@ -4,10 +4,14 @@
     --text-secondary: #a0a09a;
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
-    --accent-green: #4a6c4c;  /* Earthy Green */
-    --accent-red: #c95d5d;    /* Warning Red */
-    --accent-gold: #c9b05d;   /* Moderate Gold */
-    --highlight: #66ff99;     /* Tech Green */
+    --accent-green: #4a6c4c;
+    /* Earthy Green */
+    --accent-red: #c95d5d;
+    /* Warning Red */
+    --accent-gold: #c9b05d;
+    /* Moderate Gold */
+    --highlight: #66ff99;
+    /* Tech Green */
 }
 
 * {
@@ -24,7 +28,7 @@ body {
     display: flex;
     justify-content: center;
     padding: 2rem;
-    background-image: 
+    background-image:
         radial-gradient(circle at 10% 20%, rgba(74, 108, 76, 0.1) 0%, transparent 20%),
         radial-gradient(circle at 90% 80%, rgba(100, 100, 100, 0.1) 0%, transparent 20%);
 }
@@ -92,7 +96,8 @@ label {
     text-transform: uppercase;
 }
 
-select, input {
+select,
+input {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--glass-border);
     color: var(--text-primary);
@@ -157,9 +162,20 @@ select, input {
 }
 
 /* Status Colors */
-.status-good { color: var(--accent-green); border: 1px solid var(--accent-green); }
-.status-poor { color: var(--accent-gold); border: 1px solid var(--accent-gold); }
-.status-severe { color: var(--accent-red); border: 1px solid var(--accent-red); }
+.status-good {
+    color: var(--accent-green);
+    border: 1px solid var(--accent-green);
+}
+
+.status-poor {
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+}
+
+.status-severe {
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+}
 
 .trend-name {
     font-size: 1.5rem;
@@ -190,7 +206,7 @@ select, input {
 .spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(255,255,255,0.1);
+    border: 3px solid rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     border-top-color: var(--highlight);
     animation: spin 1s ease-in-out infinite;
@@ -198,7 +214,9 @@ select, input {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 footer {
@@ -206,4 +224,113 @@ footer {
     font-size: 0.8rem;
     color: var(--text-secondary);
     margin-top: auto;
+    padding-top: 2rem;
+}
+
+/* Transparency Panel */
+.transparency-panel {
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.transparency-panel h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.transparency-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.t-item label {
+    font-size: 0.7rem;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.t-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.t-value.small {
+    font-size: 1rem;
+    font-family: monospace;
+    color: var(--text-secondary);
+}
+
+.t-explainer {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--glass-border);
+    padding-top: 1rem;
+    line-height: 1.5;
+}
+
+/* Educational Section */
+.education-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.education-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.module-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    padding: 1.5rem;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--highlight);
+}
+
+.module-icon {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 4rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.03);
+    z-index: 0;
+}
+
+.module-card h4 {
+    color: var(--highlight);
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.module-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
 }

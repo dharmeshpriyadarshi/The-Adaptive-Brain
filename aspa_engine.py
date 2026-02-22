@@ -7,7 +7,7 @@ except ImportError:
     import dtaidistance.dtw as dtw
 
 class VeridianASPAEngine:
-    def __init__(self, csv_path):
+    def __init__(self, csv_path, train_end_date=None):
         print(f"Loading data from {csv_path}...")
         self.df = pd.read_csv(csv_path)
         
@@ -23,6 +23,13 @@ class VeridianASPAEngine:
         # Simple data cleaning: interpolate to remove NaNs which DTW hates
         # We do this per city to avoid bleeding data between cities
         self.df['AQI'] = self.df.groupby('City')['AQI'].transform(lambda x: x.interpolate(method='linear').bfill().ffill())
+        
+        # Apply training cutoff for rigorous backtesting evaluation
+        if train_end_date:
+            cutoff = pd.to_datetime(train_end_date)
+            self.df = self.df[self.df['Date'] < cutoff]
+            print(f"Rigorous ML Split: Historical training data restricted to before {cutoff.date()}.")
+            
         print("Data loaded and cleaned.")
 
     def get_pattern_match(self, city, current_30_days):

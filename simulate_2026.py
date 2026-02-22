@@ -109,11 +109,15 @@ def generate_2026_forecast():
             else:
                  predicted_aqi = np.mean(proxy_window) if len(proxy_window)>0 else 100
 
-            # Store result
+            # Store result with TRANSPARENCY METADATA
             final_output[city][date_str] = {
                 "aqi": int(predicted_aqi),
                 "trend": trend_label,
-                "is_anomaly": is_anomaly
+                "is_anomaly": is_anomaly,
+                # Transparency Fields
+                "match_date": pd.to_datetime(match['match_start_date']).strftime('%Y-%m-%d') if match else "N/A",
+                "match_dist": round(match['distance'], 2) if match else 0,
+                "confidence": round(100 / (1 + (match['distance'] if match else 1)), 1) # Simple inverse distance confidence
             }
             
             # Step forward

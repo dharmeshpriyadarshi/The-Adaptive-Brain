@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
     <div class="container">
@@ -31,7 +33,7 @@
                         <option value="Bangalore">Bangalore</option>
                     </select>
                 </div>
-                
+
                 <div class="control-group">
                     <label for="datePicker">Date in 2026</label>
                     <input type="date" id="datePicker" min="2026-01-01" max="2026-12-31" value="2026-01-01">
@@ -48,7 +50,7 @@
                         <div class="kpi-value" id="aqiValue">--</div>
                         <div class="kpi-status" id="aqiStatus">--</div>
                     </div>
-                    
+
                     <div class="kpi-card glass-panel" id="trendCard">
                         <h3>Identified Trend</h3>
                         <div class="trend-name" id="trendName">--</div>
@@ -60,16 +62,65 @@
                 <div class="chart-container glass-panel">
                     <canvas id="trendChart"></canvas>
                 </div>
+
+                <!-- Transparency Panel -->
+                <div class="transparency-panel glass-panel">
+                    <h3><span class="icon">🔍</span> Why this prediction?</h3>
+                    <div class="transparency-grid">
+                        <div class="t-item">
+                            <label>Based on Historical Event</label>
+                            <div class="t-value highlight" id="matchDate">--</div>
+                        </div>
+                        <div class="t-item">
+                            <label>Pattern Similarity</label>
+                            <div class="t-value" id="matchConfidence">--%</div>
+                        </div>
+                        <div class="t-item">
+                            <label>DTW Distance</label>
+                            <div class="t-value small" id="matchdist">--</div>
+                        </div>
+                    </div>
+                    <p class="t-explainer">
+                        The <strong>ASPA Engine</strong> identified that the pollution dynamics currently evolving in
+                        2026 strongly resemble the pattern observed in <span id="explainerDate">history</span>.
+                        It has "warped" time to align these two events.
+                    </p>
+                </div>
             </section>
-            
+
             <!-- Loading State -->
             <div id="loading" class="hidden">
                 <div class="spinner"></div>
                 <p>Aligning warped time sequences...</p>
             </div>
 
+            <!-- Educational Section -->
+            <section class="education-section">
+                <h2>Behind the Intelligence</h2>
+                <div class="module-grid">
+                    <div class="module-card">
+                        <div class="module-icon">A</div>
+                        <h4>Pattern Searcher</h4>
+                        <p>Uses <strong>Dynamic Time Warping (DTW)</strong> to find historical "shape matches"
+                            independent of exact calendar dates.</p>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-icon">B</div>
+                        <h4>Trend Classifier</h4>
+                        <p>Uses <strong>Unsupervised K-Means</strong> to cluster patterns into states like "Stagnant
+                            Winter" or "Clearing Phase".</p>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-icon">C</div>
+                        <h4>Probabilistic Projection</h4>
+                        <p>Synthesizes the forecast by applying the current year's momentum (velocity) to the historical
+                            outcome.</p>
+                    </div>
+                </div>
+            </section>
+
         </main>
-        
+
         <footer>
             <p>Powered by Veridian ASPA Engine • Model v0.1 (Alpha)</p>
         </footer>
@@ -77,4 +128,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

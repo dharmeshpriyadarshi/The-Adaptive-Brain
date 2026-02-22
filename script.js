@@ -1,19 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // DOM Elements
     const citySelect = document.getElementById('citySelect');
     const datePicker = document.getElementById('datePicker');
     const predictBtn = document.getElementById('predictBtn');
     const resultSection = document.getElementById('resultSection');
     const loadingDiv = document.getElementById('loading');
-    
+
     // KPI Elements
     const aqiValue = document.getElementById('aqiValue');
     const aqiStatus = document.getElementById('aqiStatus');
     const trendName = document.getElementById('trendName');
     const trendCard = document.getElementById('trendCard');
     const aqiCard = document.getElementById('aqiCard');
-    
+
     // Chart
     const ctx = document.getElementById('trendChart').getContext('2d');
     let trendChart;
@@ -39,10 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event Listener
     predictBtn.addEventListener('click', () => {
         if (!predictionsData) return;
-        
+
         const city = citySelect.value;
         const date = datePicker.value;
-        
+
         handlePrediction(city, date);
     });
 
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             loadingDiv.classList.add('hidden');
             resultSection.classList.remove('hidden');
-            
+
             updateUI(city, date);
         }, 800);
     }
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUI(city, date) {
         // Get data for the city
         const cityData = predictionsData[city];
-        
+
         if (!cityData) {
             alert(`No model data available for ${city} yet.`);
             return;
@@ -72,12 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Try to get exact date, or fallback (since we are using mock data mostly)
         // In real app, we would have data for every day.
         let dayData = cityData[date];
-        
+
         // --- MOCK FALLBACK LOGIC FOR DEMO ---
         // If specific date not in mock, grab the first available one to show *something*
         if (!dayData) {
             const keys = Object.keys(cityData);
-            dayData = cityData[keys[0]]; 
+            dayData = cityData[keys[0]];
             console.log("Using fallback mock data for demo purposes");
         }
         // ------------------------------------
@@ -85,11 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update KPIs
         aqiValue.textContent = dayData.aqi;
         trendName.textContent = dayData.trend;
-        
+
         // Status Logic
         let statusText = "Moderate";
         let statusClass = "status-poor";
-        
+
         if (dayData.aqi <= 100) {
             statusText = "Satisfactory";
             statusClass = "status-good";
@@ -100,12 +100,28 @@ document.addEventListener('DOMContentLoaded', () => {
             statusText = "Poor";
             statusClass = "status-poor";
         }
-        
+
         // Remove old classes
         aqiStatus.className = "kpi-status";
         aqiStatus.classList.add(statusClass);
         aqiStatus.textContent = statusText;
-        
+
+        // Transparency Data
+        const matchDateEl = document.getElementById('matchDate');
+        const matchConfEl = document.getElementById('matchConfidence');
+        const matchDistEl = document.getElementById('matchdist');
+        const explainerDateEl = document.getElementById('explainerDate');
+
+        // If simulation hasn't run yet, these might be missing in fallback mock data
+        const matchDate = dayData.match_date || "Simulated";
+        const confidence = dayData.confidence || "N/A";
+        const distance = dayData.match_dist || "N/A";
+
+        if (matchDateEl) matchDateEl.textContent = matchDate;
+        if (matchConfEl) matchConfEl.textContent = confidence + "%";
+        if (matchDistEl) matchDistEl.textContent = distance;
+        if (explainerDateEl) explainerDateEl.textContent = matchDate;
+
         // Anomaly Highlight
         if (dayData.is_anomaly) {
             trendCard.style.borderColor = "var(--accent-red)";
@@ -129,12 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Real app would pull this from the JSON
         const labels = [];
         const dataPoints = [];
-        
+
         // Generate +/- 5 days
         for (let i = -5; i <= 5; i++) {
             labels.push(`Day ${i > 0 ? '+' + i : i}`);
             // Add some random variance to the target AQI to make a line
-            let val = targetAQI + (Math.random() * 50 - 25); 
+            let val = targetAQI + (Math.random() * 50 - 25);
             if (i === 0) val = targetAQI; // Exact match for center
             dataPoints.push(val);
         }
