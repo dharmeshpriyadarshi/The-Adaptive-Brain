@@ -122,6 +122,30 @@ document.addEventListener('DOMContentLoaded', () => {
         if (matchDistEl) matchDistEl.textContent = distance;
         if (explainerDateEl) explainerDateEl.textContent = matchDate;
 
+        // Deep ML Elements
+        const mlClusterEl = document.getElementById('mlCluster');
+        const mlMeanEl = document.getElementById('mlMean');
+        const mlSlopeEl = document.getElementById('mlSlope');
+        const mlAlphaEl = document.getElementById('mlAlpha');
+        const mlBetaEl = document.getElementById('mlBeta');
+        const mlHistEl = document.getElementById('mlHist');
+
+        if (dayData.ml_details) {
+            if (mlClusterEl) mlClusterEl.textContent = dayData.ml_details.cluster_id;
+            if (mlMeanEl) mlMeanEl.textContent = dayData.ml_details.cluster_mean;
+            if (mlSlopeEl) mlSlopeEl.textContent = dayData.ml_details.cluster_slope;
+            if (mlAlphaEl) mlAlphaEl.textContent = dayData.ml_details.alpha;
+            if (mlBetaEl) mlBetaEl.textContent = dayData.ml_details.beta;
+            if (mlHistEl) mlHistEl.textContent = dayData.ml_details.historic_base;
+        } else {
+            if (mlClusterEl) mlClusterEl.textContent = "--";
+            if (mlMeanEl) mlMeanEl.textContent = "--";
+            if (mlSlopeEl) mlSlopeEl.textContent = "--";
+            if (mlAlphaEl) mlAlphaEl.textContent = "--";
+            if (mlBetaEl) mlBetaEl.textContent = "--";
+            if (mlHistEl) mlHistEl.textContent = "--";
+        }
+
         // Anomaly Highlight
         if (dayData.is_anomaly) {
             trendCard.style.borderColor = "var(--accent-red)";

@@ -111,16 +111,6 @@ class VeridianASPAEngine:
     def train_trend_classifier(self, city, n_clusters=4):
         """
         Module B: The Trend Classifier (Unsupervised)
-        Technique: K-Means Clustering on DTW Distances
-        
-        Since computing a full N x N DTW distance matrix for all 30-day windows in 10 years 
-        is computationally expensive (O(N^2)), we will use a simplified approach for this demo:
-        1. Extract random sample of 30-day windows from history.
-        2. Cluster these windows using Euclidean distance (as a proxy for shape in vector space) 
-           or fit K-Means on their statistical features (mean, std, slope).
-           
-        For the 'Pro' version we would use K-Means with custom DTW distance, but scikit-learn's 
-        KMeans assumes Euclidean space. We will use a feature-based clustering for speed and stability.
         """
         from sklearn.cluster import KMeans
         from sklearn.preprocessing import StandardScaler
@@ -130,22 +120,14 @@ class VeridianASPAEngine:
         
         data = city_df['AQI'].values
         
-        # Create a dataset of rolling windows
         windows = []
-        for i in range(0, len(data)-30, 30): # Non-overlapping for diverse training
+        for i in range(0, len(data)-30, 30):
             window = data[i:i+30]
             if len(window) == 30:
-                # Feature Engineering for "Trend Shape"
-                # 1. Mean (Level)
-                # 2. Slope (Trend Direction)
-                # 3. Std Dev (Volatility)
                 mean_val = np.mean(window)
                 std_val = np.std(window)
-                
-                # Simple linear regression for slope
                 x = np.arange(30)
                 slope, _ = np.polyfit(x, window, 1)
-                
                 windows.append([mean_val, std_val, slope])
         
         if not windows: return None
@@ -159,23 +141,41 @@ class VeridianASPAEngine:
         
         self.trend_model = kmeans
         self.trend_scaler = scaler
-        self.trend_labels = {
-            0: "Stable / Moderate",
-            1: "Volatile Spike", 
-            2: "Severe Accumulation",
-            3: "Rapid Clearing"
-        }
-        # Note: In a real unsupervised system, we'd need to manually label clusters 
-        # by inspecting their centroids. Here we use placeholders that we might adjust dynamically.
+        
+        # Dynamically map labels meaning based on actual centroid properties (mean, std, slope)
+        # to prevent "Severe Accumulation" being assigned to arbitrary ID=2 which could be low AQI.
+        centroids = scaler.inverse_transform(kmeans.cluster_centers_)
+        
+        # Simple heuristic labeling based on centroids
+        # centroids[:, 0] is mean, centroids[:, 1] is std, centroids[:, 2] is slope
+        self.trend_labels = {}
+        for i, c in enumerate(centroids):
+            c_mean, c_std, c_slope = c[0], c[1], c[2]
+            
+            if c_mean > 200:
+                if c_slope > 1: self.trend_labels[i] = "Severe Accumulation"
+                elif c_slope < -1: self.trend_labels[i] = "Clearing from Severe Crisis"
+                else: self.trend_labels[i] = "Sustained Severe Pollution"
+            elif c_mean < 100:
+                if c_slope > 1: self.trend_labels[i] = "Rising Moderate"
+                else: self.trend_labels[i] = "Stable / Satisfactory"
+            else:
+                if c_std > 50: self.trend_labels[i] = "Volatile Spike"
+                elif c_slope > 0: self.trend_labels[i] = "Gradual Accumulation"
+                else: self.trend_labels[i] = "Gradual Clearing"
+                
+            # Fallback if unassigned
+            if i not in self.trend_labels:
+                self.trend_labels[i] = "Moderate Fluctuation"
         
         print(f"Trend Classifier trained for {city} with {n_clusters} clusters.")
         
     def get_trend_state(self, window_data):
         """
-        Returns the 'Trend State' (e.g., 'Severe Accumulation') for a given 30-day window.
+        Returns the 'Trend State' and structural ML metrics for transparency.
         """
         if not hasattr(self, 'trend_model'):
-            return "Unknown (Model Not Trained)"
+            return {"label": "Unknown", "cluster_id": -1, "mean": 0, "std": 0, "slope": 0}
             
         mean_val = np.mean(window_data)
         std_val = np.std(window_data)
@@ -185,49 +185,42 @@ class VeridianASPAEngine:
         features = np.array([[mean_val, std_val, slope]])
         features_scaled = self.trend_scaler.transform(features)
         
-        cluster_id = self.trend_model.predict(features_scaled)[0]
+        cluster_id = int(self.trend_model.predict(features_scaled)[0])
+        label = self.trend_labels.get(cluster_id, f"Trend Pattern {cluster_id}")
         
-        # Dynamic Relabeling based on cluster centroid characteristics could go here
-        # For now, return the ID or a mapped name
-        return self.trend_labels.get(cluster_id, f"Trend Pattern {cluster_id}")
+        return {
+            "label": label,
+            "cluster_id": cluster_id,
+            "mean": round(float(mean_val), 2),
+            "std": round(float(std_val), 2),
+            "slope": round(float(slope), 2)
+        }
 
-    def synthesize_prediction(self, historical_match_data, current_trend_slope=None):
+    def synthesize_prediction(self, historical_match_data, current_trend_slope=0):
         """
         Module C: Probabilistic Projection
-        The "Look-Ahead": Takes the 14 days following the match.
-        Adjustment: Applies the Velocity of the current year to that historical trend.
+        Returns the final forecast array + transparency dict
         """
         if historical_match_data is None:
-            return None
+            return None, {}
             
         historical_projection = historical_match_data['look_ahead_data']
-        historical_mean = np.mean(historical_projection)
-        
-        # If we have current trend info (slope), we can adjust the projection
-        # For this version, we'll use a simplified weighted average as requested
-        # Method 1 + Method 2 Synthesis
-        
-        # Calculate a "Trend Projection" based on continuing the current slope 
-        # starting from the last known value
         last_known_val = historical_match_data['historical_data'][-1]
         
-        # Use provided slope or 0 (flat) if unknown
         slope = current_trend_slope if current_trend_slope is not None else 0
-        
-        # Create a linear projection for the next 14 days based on current momentum
         trend_projection = np.array([last_known_val + (slope * i) for i in range(1, 15)])
         
-        # Dynamic weighting: If trend is very strong (low distance match), trust history more?
-        # User Algo: final_forecast = (alpha * trend_projection) + (beta * historical_mean vector)
-        
-        # Let's say we trust history shape (beta) more but adjust level via alpha?
-        # Actually user formulation was:
-        # final_forecast = (alpha * trend_projection) + (beta * historical_mean)
-        # We will interpret 'historical_mean' as the historical vector itself to keep the shape.
-        
-        alpha = 0.4  # Weight for the Linear Momentum vs
-        beta = 0.6   # Weight for the Historical Shape
+        alpha = 0.4  # Weight for Linear Momentum
+        beta = 0.6   # Weight for Historical Shape
         
         final_forecast = (alpha * trend_projection) + (beta * historical_projection)
         
-        return final_forecast
+        details = {
+            "alpha": alpha,
+            "beta": beta,
+            "momentum_v": round(float(slope), 2),
+            "base_hist_pred": round(float(historical_projection[0]), 2),
+            "base_trend_pred": round(float(trend_projection[0]), 2)
+        }
+        
+        return final_forecast, details

@@ -63,7 +63,7 @@ def evaluate_model():
             trend_label = engine.get_trend_state(query_window)
             
             # Module C: Synthesis (Forecast 14 days)
-            predicted_14_days = engine.synthesize_prediction(match, current_trend_slope=0)
+            predicted_14_days, _ = engine.synthesize_prediction(match, current_trend_slope=0)
             
             # Mathematical Error metrics (MAE) for day 1 prediction
             day_1_actual = actual_future_14_days[0]

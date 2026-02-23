@@ -96,28 +96,41 @@ def generate_2026_forecast():
             
             if match:
                 # 3. Run Module B
-                trend_label = engine.get_trend_state(proxy_window)
+                trend_details = engine.get_trend_state(proxy_window)
+                trend_label = trend_details.get("label", "Unknown")
                 
                 # 4. Run Module C
-                # We assume a flat momentum (0) for the simulation
-                forecast_vector = engine.synthesize_prediction(match, current_trend_slope=0)
-                predicted_aqi = float(forecast_vector[0]) # Valid for 'tomorrow' (relative to query window)
+                forecast_vector, synth_details = engine.synthesize_prediction(match, current_trend_slope=trend_details.get("slope", 0))
+                
+                predicted_aqi = float(forecast_vector[0]) 
                 
                 # Anomaly Check
                 if "Severe" in trend_label or "Volatile" in trend_label or predicted_aqi > 300:
                     is_anomaly = True
             else:
                  predicted_aqi = np.mean(proxy_window) if len(proxy_window)>0 else 100
+                 trend_details = {}
+                 synth_details = {}
 
             # Store result with TRANSPARENCY METADATA
             final_output[city][date_str] = {
                 "aqi": int(predicted_aqi),
                 "trend": trend_label,
                 "is_anomaly": is_anomaly,
-                # Transparency Fields
+                # Basic Transparency Fields
                 "match_date": pd.to_datetime(match['match_start_date']).strftime('%Y-%m-%d') if match else "N/A",
                 "match_dist": round(match['distance'], 2) if match else 0,
-                "confidence": round(100 / (1 + (match['distance'] if match else 1)), 1) # Simple inverse distance confidence
+                "confidence": round(100 / (1 + (match['distance'] if match else 1)), 1), # Simple inverse distance confidence
+                
+                # Deep ML Mechanics
+                "ml_details": {
+                     "cluster_id": trend_details.get("cluster_id", "N/A"),
+                     "cluster_mean": trend_details.get("mean", 0),
+                     "cluster_slope": trend_details.get("slope", 0),
+                     "alpha": synth_details.get("alpha", 0),
+                     "beta": synth_details.get("beta", 0),
+                     "historic_base": synth_details.get("base_hist_pred", 0)
+                }
             }
             
             # Step forward

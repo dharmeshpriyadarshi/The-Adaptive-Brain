@@ -265,6 +265,28 @@ footer {
     color: var(--text-secondary);
 }
 
+.t-divider {
+    border: 0;
+    height: 1px;
+    background: var(--glass-border);
+    margin: 1.5rem 0;
+}
+
+.t-subtitle {
+    font-size: 0.85rem;
+    color: var(--highlight);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.ml-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
 .t-explainer {
     font-size: 0.9rem;
     color: var(--text-secondary);
